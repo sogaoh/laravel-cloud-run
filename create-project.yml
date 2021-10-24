@@ -1,0 +1,8 @@
+version: "3.8"
+services:
+  composer:
+    image: composer:2.0
+    volumes:
+      - ./appBase/lara-sample:/work
+    working_dir: /work
+
