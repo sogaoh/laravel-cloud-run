@@ -30,9 +30,9 @@ restart:
 # exec
 app:
 	docker-compose exec app ash
-web:
-	docker-compose exec web ash
 db:
 	docker-compose exec db ash
 redis:
 	docker-compose exec redis ash
+node:
+	docker-compose exec node ash
