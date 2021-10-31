@@ -6,32 +6,26 @@ volumes:
 
 services:
   app:
-    build:
-      context: .
-      dockerfile: ./docker/php-fpm/Dockerfile
-      args:
-        - TZ=${TZ}
+    image: laravel-cloud-run/lara-sample:latest
     ports:
-      - 8090:8000
+      - 8080:8000
     depends_on:
       - db
       - redis
     env_file:
       - ./.env
-    volumes:
-      - ../lara-sample:/work
     working_dir: /work
     command: php artisan serve --host=0.0.0.0
 
   db:
     build:
       context: .
-      dockerfile: ./docker/pgsql/Dockerfile
+      dockerfile: ./ship/docker/pgsql/Dockerfile
       args:
         - TZ=${TZ}
     volumes:
       - ~/.lara-sample/data/postgres:/var/lib/postgresql/data
-      - ./docker/pgsql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - ./ship/docker/pgsql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     ports:
       - "${POSTGRES_PORT}:5432"
     environment:
@@ -43,21 +37,21 @@ services:
   redis:
     build:
       context: .
-      dockerfile: ./docker/redis/Dockerfile
+      dockerfile: ./ship/docker/redis/Dockerfile
       args:
         - TZ=${TZ}
 
-  node:
-    build:
-      context: .
-      dockerfile: ./docker/node/Dockerfile
-      args:
-        - TZ=${TZ}
-    #depends_on:
-    #  - app
-    ports:
-      - ${NGINX_PORT:-3110}:80
-    volumes:
-      - ../lara-sample:/work
-    env_file:
-      - ./.env
+#  node:
+#    build:
+#      context: .
+#      dockerfile: ./docker/node/Dockerfile
+#      args:
+#        - TZ=${TZ}
+#    #depends_on:
+#    #  - app
+#    ports:
+#      - ${NGINX_PORT:-3110}:80
+#    volumes:
+#      - ../lara-sample:/work
+#    env_file:
+#      - ./.env

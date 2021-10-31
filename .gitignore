@@ -3,6 +3,7 @@
 /appBase/run/.env
 /appBase/lara-sample/.env
 /appBase/lara-sample/.php_cs.cache
+/appBase/lara-sample/.phpunit.result.cache
 /appBase/lara-sample/public/mix-manifest.json
 /appBase/lara-sample/public/js/app.js
 /appBase/lara-sample/public/css/app.css
@@ -13,3 +14,5 @@
 /appBase/lara-sample/storage/framework/testing
 /appBase/lara-sample/storage/framework/views
 /appBase/lara-sample/storage/logs
+/appBase/.env
+/appBase/.envrc
