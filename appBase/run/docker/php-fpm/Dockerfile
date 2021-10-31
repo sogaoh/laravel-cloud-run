@@ -34,9 +34,10 @@ RUN set -eux && \
 
 
 # php.ini
-COPY docker/php/php.ini /usr/local/etc/php/php.ini
-COPY docker/php/zzz-www.conf /usr/local/etc/php-fpm.d/zzz-www.conf
+COPY docker/php-fpm/php.ini /usr/local/etc/php/php.ini
+COPY docker/php-fpm/zzz-www.conf /usr/local/etc/php-fpm.d/zzz-www.conf
 
 
 WORKDIR /work
 
+EXPOSE 8080

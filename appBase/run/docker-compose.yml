@@ -8,11 +8,11 @@ services:
   app:
     build:
       context: .
-      dockerfile: ./docker/php/Dockerfile
+      dockerfile: ./docker/php-fpm/Dockerfile
       args:
         - TZ=${TZ}
     ports:
-      - 8000:8000
+      - 8080:8000
     depends_on:
       - db
       - redis
