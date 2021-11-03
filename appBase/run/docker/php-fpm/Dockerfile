@@ -21,7 +21,7 @@ RUN apk add --no-cache $PHPIZE_DEPS
 
 # install Lib
 RUN apk update && \
-    apk add --no-cache --virtual .php-builds oniguruma-dev postgresql-dev git zip unzip && \
+    apk add --no-cache --virtual .php-builds oniguruma-dev postgresql-dev git zip unzip make && \
     docker-php-ext-install mbstring pdo pdo_pgsql
 
 # TimeZone
@@ -41,3 +41,5 @@ COPY docker/php-fpm/zzz-www.conf /usr/local/etc/php-fpm.d/zzz-www.conf
 WORKDIR /work
 
 EXPOSE 8090
+
+ENTRYPOINT ["make","serve"]

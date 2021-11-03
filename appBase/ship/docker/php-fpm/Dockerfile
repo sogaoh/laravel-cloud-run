@@ -22,7 +22,7 @@ RUN apk add --no-cache $PHPIZE_DEPS
 
 # install Lib
 RUN apk update && \
-    apk add --no-cache --virtual .php-builds oniguruma-dev postgresql-dev git zip unzip && \
+    apk add --no-cache --virtual .php-builds oniguruma-dev postgresql-dev git zip unzip make && \
     docker-php-ext-install mbstring pdo pdo_pgsql
 
 # TimeZone
@@ -66,3 +66,5 @@ RUN chmod -R a+w storage && \
     chmod -R a+w bootstrap/cache
 
 EXPOSE 8080
+
+ENTRYPOINT ["make","serve"]

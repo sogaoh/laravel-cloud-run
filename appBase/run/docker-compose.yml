@@ -21,7 +21,7 @@ services:
     volumes:
       - ../lara-sample:/work
     working_dir: /work
-    command: php artisan serve --host=0.0.0.0
+    #command: php artisan serve --host=0.0.0.0
 
   db:
     build:
