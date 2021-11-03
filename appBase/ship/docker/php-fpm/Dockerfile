@@ -65,6 +65,6 @@ RUN chown -R www-data:www-data .
 RUN chmod -R a+w storage && \
     chmod -R a+w bootstrap/cache
 
-EXPOSE 8080
+#EXPOSE 8080
 
 ENTRYPOINT ["make","serve"]
