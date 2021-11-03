@@ -3,6 +3,9 @@
 help:
 	cat Makefile
 
+
+GCP_PROJECT  :=
+
 PRODUCT_NAME := laravel-cloud-run
 
 IMG_TAG := latest
@@ -24,10 +27,10 @@ build:
 	docker build --no-cache -t $(PRODUCT_NAME)/lara-sample:$(IMG_TAG) -f ./ship/docker/php-fpm/Dockerfile $(BLDARG_TZ) $(BLDARG_NODEV_OPT) .
 # tag
 tag:
-	#docker tag $(PRODUCT_NAME)/lara-sample:$(IMG_TAG)
+	docker tag $(PRODUCT_NAME)/lara-sample:$(IMG_TAG) asia-northeast1-docker.pkg.dev/$(GCP_PROJECT)/$(PRODUCT_NAME)/lara-sample:$(IMG_TAG)
 # push
 push:
-	#docker push
+	docker push asia-northeast1-docker.pkg.dev/$(GCP_PROJECT)/$(PRODUCT_NAME)/lara-sample:$(IMG_TAG)
 
 
 
