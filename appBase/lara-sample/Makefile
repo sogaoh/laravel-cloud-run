@@ -29,4 +29,5 @@ version:
 	php artisan --version
 
 serve:
+	php artisan migrate    # init
 	php artisan serve --host=0.0.0.0

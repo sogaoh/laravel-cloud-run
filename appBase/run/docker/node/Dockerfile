@@ -23,4 +23,7 @@ COPY --from=node /opt /opt
 # nginx config file
 #COPY ./docker/node/default.conf /etc/nginx/conf.d/default.conf
 
+RUN mkdir -p /root/.npm/_logs && \
+    chmod 777 /root/.npm/_logs
+
 WORKDIR /work
