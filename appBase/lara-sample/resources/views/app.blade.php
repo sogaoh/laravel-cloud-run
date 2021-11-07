@@ -13,6 +13,9 @@
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
         <!-- Scripts -->
+        <script>
+            var __locale = '{{ app()->getLocale() }}'
+        </script>
         @routes
         <script src="{{ mix('js/app.js') }}" defer></script>
     </head>

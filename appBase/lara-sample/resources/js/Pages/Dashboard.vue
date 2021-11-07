@@ -1,8 +1,8 @@
 <template>
-    <app-layout title="Dashboard">
+    <app-layout :title="$t('Dashboard')">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Dashboard
+                {{ $t('Dashboard') }}
             </h2>
         </template>
 

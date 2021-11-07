@@ -6,14 +6,14 @@
 
         <jet-dialog-modal :show="confirmingPassword" @close="closeModal">
             <template #title>
-                {{ title }}
+                {{ $t(title) }}
             </template>
 
             <template #content>
-                {{ content }}
+                {{ $t(content) }}
 
                 <div class="mt-4">
-                    <jet-input type="password" class="mt-1 block w-3/4" placeholder="Password"
+                    <jet-input type="password" class="mt-1 block w-3/4" :placeholder="$t('Password')"
                                 ref="password"
                                 v-model="form.password"
                                 @keyup.enter="confirmPassword" />
@@ -24,11 +24,11 @@
 
             <template #footer>
                 <jet-secondary-button @click="closeModal">
-                    Cancel
+                    {{ $t('Cancel') }}
                 </jet-secondary-button>
 
                 <jet-button class="ml-2" @click="confirmPassword" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    {{ button }}
+                    {{ $t(button) }}
                 </jet-button>
             </template>
         </jet-dialog-modal>
