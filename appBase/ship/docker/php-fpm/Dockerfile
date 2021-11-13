@@ -22,8 +22,10 @@ RUN apk add --no-cache $PHPIZE_DEPS
 
 # install Lib
 RUN apk update && \
-    apk add --no-cache --virtual .php-builds oniguruma-dev postgresql-dev icu-dev git zip unzip make && \
-    docker-php-ext-install intl mbstring pdo pdo_pgsql
+    #apk add --no-cache --virtual .php-builds oniguruma-dev postgresql-dev icu-dev git zip unzip make && \
+    apk add --no-cache --virtual .php-builds oniguruma-dev sqlite icu-dev git zip unzip make && \
+    #docker-php-ext-install intl mbstring pdo pdo_pgsql
+    docker-php-ext-install intl mbstring
 
 # TimeZone
 ARG TZ
@@ -35,6 +37,13 @@ RUN set -eux && \
 
 
 COPY lara-sample /work
+
+
+# database.sqlite
+RUN if [ ! -e "/work/database/database.sqlite" ]; then \
+        touch /work/database/database.sqlite; \
+    fi
+RUN chmod a+w /work/database/database.sqlite
 
 
 # php.ini

@@ -9,37 +9,37 @@ services:
     image: laravel-cloud-run/lara-sample:latest
     ports:
       - 8080:8000
-    depends_on:
-      - db
-      - redis
+    #depends_on:
+    #  - db
+    #  - redis
     env_file:
       - ./.env
     working_dir: /work
     #command: php artisan serve --host=0.0.0.0
 
-  db:
-    build:
-      context: .
-      dockerfile: ./ship/docker/pgsql/Dockerfile
-      args:
-        - TZ=${TZ}
-    volumes:
-      - ~/.lara-sample/data/postgres:/var/lib/postgresql/data
-      - ./ship/docker/pgsql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
-    ports:
-      - "${POSTGRES_PORT}:5432"
-    environment:
-      #- TZ=Asia/Tokyo
-      - POSTGRES_DB=${DB_DATABASE}
-      - POSTGRES_USER=${DB_USERNAME}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
+  # db:
+  #   build:
+  #     context: .
+  #     dockerfile: ./ship/docker/pgsql/Dockerfile
+  #     args:
+  #       - TZ=${TZ}
+  #   volumes:
+  #     - ~/.lara-sample/data/postgres:/var/lib/postgresql/data
+  #     - ./ship/docker/pgsql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+  #   ports:
+  #     - "${POSTGRES_PORT}:5432"
+  #   environment:
+  #     #- TZ=Asia/Tokyo
+  #     - POSTGRES_DB=${DB_DATABASE}
+  #     - POSTGRES_USER=${DB_USERNAME}
+  #     - POSTGRES_PASSWORD=${DB_PASSWORD}
 
-  redis:
-    build:
-      context: .
-      dockerfile: ./ship/docker/redis/Dockerfile
-      args:
-        - TZ=${TZ}
+  # redis:
+  #   build:
+  #     context: .
+  #     dockerfile: ./ship/docker/redis/Dockerfile
+  #     args:
+  #       - TZ=${TZ}
 
 #  node:
 #    build:
