@@ -1,11 +1,11 @@
 name: development
 
-on: [push]
-# on:
-#   push:
-#     branches:
-#       - '!main'
-#       - '!develop'
+#on: [push]
+on:
+  push:
+    branches:
+      - '!main'
+      - '!develop'
 
 jobs:
   fixer:
@@ -32,44 +32,54 @@ jobs:
           cd ${GITHUB_WORKSPACE}/appBase/run
           docker-compose exec -T app make cs
 
-  test:
-    needs: fixer
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Install docker-compose
-        if: ${{ env.ACT }}
+      - name: Push fixed codes
         run: |
-          apt-get update && apt-get install -y docker-compose
+          git config --global user.name "${GITHUB_ACTOR}"
+          git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          if (git diff --shortstat | grep '[0-9]'); then \
+            git add .; \
+            git commit -m "Auto push by GitHub Actions (fixer)"; \
+            git push origin HEAD:${GITHUB_REF}; \
+          fi
 
-      - name: Checkout
-        uses: actions/checkout@v2
+  # test:
+  #   needs: fixer
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - name: Install docker-compose
+  #       if: ${{ env.ACT }}
+  #       run: |
+  #         apt-get update && apt-get install -y docker-compose
 
-      - name: Start
-        run: |
-          cd ${GITHUB_WORKSPACE}
-          make vendor
-          cd ${GITHUB_WORKSPACE}/appBase/run
-          make local
-          make up
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
 
-      - name: Database initialize
-        run: |
-          cd ${GITHUB_WORKSPACE}/appBase/run
-          #docker-compose exec -T app make compi
-          docker-compose exec -T app make fresh
+  #     - name: Start
+  #       run: |
+  #         cd ${GITHUB_WORKSPACE}
+  #         make vendor
+  #         cd ${GITHUB_WORKSPACE}/appBase/run
+  #         make local
+  #         make up
 
-      - name: Frontend compile
-        run: |
-          cd ${GITHUB_WORKSPACE}/appBase/run
-          docker-compose exec -T node make npmid
+  #     - name: Database initialize
+  #       run: |
+  #         cd ${GITHUB_WORKSPACE}/appBase/run
+  #         #docker-compose exec -T app make compi
+  #         docker-compose exec -T app make fresh
 
-      - name: Run testing
-        run: |
-          cd ${GITHUB_WORKSPACE}/appBase/run
-          docker-compose exec -T app make coverage
+  #     - name: Frontend compile
+  #       run: |
+  #         cd ${GITHUB_WORKSPACE}/appBase/run
+  #         docker-compose exec -T node make npmid
 
-      - name: Save coverage report
-        uses: actions/upload-artifact@v2
-        with:
-          name: code-coverage-report
-          path: appBase/lara-sample/storage/coverage/*
+  #     - name: Run testing
+  #       run: |
+  #         cd ${GITHUB_WORKSPACE}/appBase/run
+  #         docker-compose exec -T app make coverage
+
+  #     - name: Save coverage report
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: code-coverage-report
+  #         path: appBase/lara-sample/storage/coverage/*
