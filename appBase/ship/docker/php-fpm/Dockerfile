@@ -22,8 +22,8 @@ RUN apk add --no-cache $PHPIZE_DEPS
 
 # install Lib
 RUN apk update && \
-    apk add --no-cache --virtual .php-builds oniguruma-dev postgresql-dev icu-dev git zip unzip make && \
-    docker-php-ext-install intl mbstring pdo pdo_pgsql
+    apk add --no-cache --virtual .php-builds oniguruma-dev postgresql-dev icu-dev libzip-dev git zip unzip make && \
+    docker-php-ext-install intl mbstring zip pdo pdo_pgsql
 
 # TimeZone
 ARG TZ
