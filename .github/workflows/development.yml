@@ -11,6 +11,11 @@ jobs:
   fixer:
     runs-on: ubuntu-20.04
     steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
       - name: Install docker-compose
         if: ${{ env.ACT }}
         run: |
@@ -31,6 +36,17 @@ jobs:
         run: |
           cd ${GITHUB_WORKSPACE}/appBase/run
           docker-compose exec -T app make cs
+
+      - name: Push fixed codes
+        run: |
+          echo "Branch is: [${{ steps.extract_branch.outputs.branch }}]"
+          git config --global user.name "${GITHUB_ACTOR}"
+          git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          if (git diff --shortstat | grep '[0-9]'); then \
+            git add .; \
+            git commit -m "Auto push by GitHub Actions (fixer)"; \
+            git push origin HEAD:${GITHUB_REF}; \
+          fi
 
   test:
     needs: fixer
