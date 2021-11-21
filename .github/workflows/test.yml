@@ -33,6 +33,11 @@ jobs:
           #docker-compose exec -T app make compi
           docker-compose exec -T app make fresh
 
+      - name: Frontend compile
+        run: |
+          cd ${GITHUB_WORKSPACE}/appBase/run
+          docker-compose exec -T node make npmid
+
       - name: Run testing
         run: |
           cd ${GITHUB_WORKSPACE}/appBase/run
