@@ -25,7 +25,7 @@ jobs:
           make vendor
           cd ${GITHUB_WORKSPACE}/appBase/run
           make local
-          make upmod
+          make up
 
       - name: Database initialize
         run: |
