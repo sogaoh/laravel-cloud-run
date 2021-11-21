@@ -7,11 +7,12 @@ on:
         description: 'Note'
         required: true
         default: 'Run manually'
-on:
-  push:
-    branches:
-      - '!main'
-      - '!develop'
+# on:
+#   push:
+#     branches:
+#       - '!main'
+#       - '!release/**'
+#       - '!develop'
 
 jobs:
   fixer:
