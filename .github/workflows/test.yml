@@ -1,0 +1,40 @@
+name: Test
+
+on: [push]
+# on:
+#   push:
+#     branches:
+#       - '!main'
+#       - '!develop'
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Install docker-compose
+        if: ${{ env.ACT }}
+        run: |
+          apt-get update && apt-get install -y docker-compose
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Start
+        run: |
+          cd ${GITHUB_WORKSPACE}
+          make vendor
+          cd ${GITHUB_WORKSPACE}/appBase/run
+          make local
+          make upmod
+
+      - name: Database initialize
+        run: |
+          cd ${GITHUB_WORKSPACE}/appBase/run
+          #docker-compose exec -T app make compi
+          docker-compose exec -T app make fresh
+
+      - name: Run testing
+        run: |
+          cd ${GITHUB_WORKSPACE}/appBase/run
+          docker-compose exec -T app make test
+
