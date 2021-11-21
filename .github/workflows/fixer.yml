@@ -1,4 +1,4 @@
-name: Test
+name: Fixer
 
 on: [push]
 # on:
@@ -8,7 +8,7 @@ on: [push]
 #       - '!develop'
 
 jobs:
-  test:
+  fixer:
     runs-on: ubuntu-20.04
     steps:
       - name: Install docker-compose
@@ -27,18 +27,7 @@ jobs:
           make local
           make up
 
-      - name: Database initialize
+      - name: Run php-cs-fixer
         run: |
           cd ${GITHUB_WORKSPACE}/appBase/run
-          #docker-compose exec -T app make compi
-          docker-compose exec -T app make fresh
-
-      - name: Frontend compile
-        run: |
-          cd ${GITHUB_WORKSPACE}/appBase/run
-          docker-compose exec -T node make npmid
-
-      - name: Run testing
-        run: |
-          cd ${GITHUB_WORKSPACE}/appBase/run
-          docker-compose exec -T app make test
+          docker-compose exec -T app make cs
