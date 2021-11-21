@@ -1,16 +1,21 @@
 name: development
 
-#on: [push]
-on:
-  push:
-    branches:
-      - '!main'
-      - '!develop'
+on: [push]
+# on:
+#   push:
+#     branches:
+#       - '!main'
+#       - '!develop'
 
 jobs:
   fixer:
     runs-on: ubuntu-20.04
     steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
       - name: Install docker-compose
         if: ${{ env.ACT }}
         run: |
@@ -34,6 +39,7 @@ jobs:
 
       - name: Push fixed codes
         run: |
+          echo "Branch is: [${{ steps.extract_branch.outputs.branch }}]"
           git config --global user.name "${GITHUB_ACTOR}"
           git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
           if (git diff --shortstat | grep '[0-9]'); then \
