@@ -1,11 +1,17 @@
 name: development
 
-on: [push]
-# on:
-#   push:
-#     branches:
-#       - '!main'
-#       - '!develop'
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Note'
+        required: true
+        default: 'Run manually'
+on:
+  push:
+    branches:
+      - '!main'
+      - '!develop'
 
 jobs:
   fixer:
