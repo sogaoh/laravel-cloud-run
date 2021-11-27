@@ -65,12 +65,12 @@ jobs:
           echo "Branch is: [${{ steps.extract_branch.outputs.branch }}]"
           git config --global user.name "${GITHUB_ACTOR}"
           git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-          echo "::set-output name=GIT_DIFF::'none'"
+          echo "::set-output name=GIT_DIFF::none"
           if (git diff --shortstat | grep '[0-9]'); then \
             git add .; \
             git commit -m "Auto push by GitHub Actions (fixer)"; \
             git push origin HEAD:${GITHUB_REF}; \
-            echo "::set-output name=GIT_DIFF::'fixed'"
+            echo "::set-output name=GIT_DIFF::fixed"
           fi
         id: push-fixed-codes
 
