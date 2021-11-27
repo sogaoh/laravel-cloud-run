@@ -31,17 +31,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Cache vendor Directory
-        id: composer-cache
-        uses: actions/cache@v2
-        with:
-          path: ${GITHUB_WORKSPACE}/lara-sample/vendor
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
+      #- name: Cache vendor Directory
+      #  id: composer-cache
+      #  uses: actions/cache@v2
+      #  with:
+      #    path: ${GITHUB_WORKSPACE}/lara-sample/vendor
+      #    key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+      #    restore-keys: |
+      #      ${{ runner.os }}-composer-
 
       - name: Composer Install
-        if: steps.composer-cache.outputs.cache-hit != 'true'
+        #if: steps.composer-cache.outputs.cache-hit != 'true'
         run: |
           cd ${GITHUB_WORKSPACE}
           make vendor
@@ -55,8 +55,7 @@ jobs:
       - name: Run php-cs-fixer
         run: |
           cd ${GITHUB_WORKSPACE}/appBase/run
-          docker-compose exec -T app make vendor
-          docker-compose exec -T app make clr
+          #docker-compose exec -T app make clr
           docker-compose exec -T app make cs
 
       - name: Push fixed codes
@@ -83,17 +82,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Cache vendor Directory
-        id: composer-cache
-        uses: actions/cache@v2
-        with:
-          path: ${GITHUB_WORKSPACE}/lara-sample/vendor
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
+      #- name: Cache vendor Directory
+      #  id: composer-cache
+      #  uses: actions/cache@v2
+      #  with:
+      #    path: ${GITHUB_WORKSPACE}/lara-sample/vendor
+      #    key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+      #    restore-keys: |
+      #      ${{ runner.os }}-composer-
 
       - name: Composer Install
-        if: steps.composer-cache.outputs.cache-hit != 'true'
+        #if: steps.composer-cache.outputs.cache-hit != 'true'
         run: |
           cd ${GITHUB_WORKSPACE}
           make vendor
@@ -107,8 +106,7 @@ jobs:
       - name: Database initialize
         run: |
           cd ${GITHUB_WORKSPACE}/appBase/run
-          docker-compose exec -T app make vendor
-          docker-compose exec -T app make clr
+          #docker-compose exec -T app make clr
           docker-compose exec -T app make fresh
 
       - name: Cache node_modules Directory
