@@ -55,6 +55,7 @@ jobs:
       - name: Run php-cs-fixer
         run: |
           cd ${GITHUB_WORKSPACE}/appBase/run
+          docker-compose exec -T app make vendor
           docker-compose exec -T app make cs
 
       - name: Push fixed codes
