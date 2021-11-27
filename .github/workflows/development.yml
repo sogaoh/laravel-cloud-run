@@ -1,17 +1,16 @@
 name: development
 
-on:
-  workflow_dispatch:
-    inputs:
-      name:
-        description: 'Note'
-        required: true
-        default: 'Run manually'
+on: [push]
 # on:
+#   workflow_dispatch:
+#     inputs:
+#       name:
+#         description: 'Note'
+#         required: true
+#         default: 'Run manually'
 #   push:
 #     branches:
 #       - '!main'
-#       - '!release/**'
 #       - '!develop'
 
 jobs:
@@ -56,7 +55,7 @@ jobs:
           fi
 
   test:
-    needs: fixer
+    #needs: fixer
     runs-on: ubuntu-20.04
     steps:
       - name: Install docker-compose
