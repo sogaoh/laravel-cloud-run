@@ -53,6 +53,7 @@ jobs:
             git commit -m "Auto push by GitHub Actions (fixer)"; \
             git push origin HEAD:${GITHUB_REF}; \
           fi
+        if: ${{ !env.ACT }}
 
   test:
     needs: fixer
@@ -103,4 +104,4 @@ jobs:
           fields: message,author,ref,workflow,took,pullRequest
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
-        if: always()
+        if: ${{ !env.ACT }}
