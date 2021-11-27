@@ -53,22 +53,46 @@ jobs:
           make up
 
       - name: Run php-cs-fixer
+        if: ${{ !env.ACT }}
         run: |
           cd ${GITHUB_WORKSPACE}/appBase/run
           #docker-compose exec -T app make clr
           docker-compose exec -T app make cs
 
       - name: Push fixed codes
+        if: ${{ !env.ACT }}
         run: |
           echo "Branch is: [${{ steps.extract_branch.outputs.branch }}]"
           git config --global user.name "${GITHUB_ACTOR}"
           git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          echo "set-output name=GIT_DIFF::none"
           if (git diff --shortstat | grep '[0-9]'); then \
             git add .; \
             git commit -m "Auto push by GitHub Actions (fixer)"; \
             git push origin HEAD:${GITHUB_REF}; \
+            echo "set-output name=GIT_DIFF::fixed"
           fi
+        id: push-fixed-codes
+
+      - name: Get GIT_DIFF
         if: ${{ !env.ACT }}
+        run: echo 'GIT_DIFF is ' ${{ steps.push-fixed-codes.outputs.GIT_DIFF }}
+
+      - name: Notify to Slack (If fixed)
+        if: ${{ !env.ACT && steps.push-fixed-codes.outputs.GIT_DIFF != 'none'}}
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          fields: ref,author
+          custom_payload: |
+            {
+              attachments: [{
+                color: 'warning',
+                text: `Auto fixed : ${process.env.AS_REPO}@${process.env.AS_REF}`,
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   test:
     needs: fixer
@@ -141,10 +165,10 @@ jobs:
           path: appBase/lara-sample/storage/coverage/*
 
       - name: Notify to Slack
-        if: ${{ !env.ACT }}
+        if: ${{ !env.ACT && always() }}
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
           fields: message,author,ref,workflow,took,pullRequest
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
