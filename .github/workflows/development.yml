@@ -109,17 +109,17 @@ jobs:
           #docker-compose exec -T app make clr
           docker-compose exec -T app make fresh
 
-      - name: Cache node_modules Directory
-        id: node_modules-cache
-        uses: actions/cache@v2
-        with:
-          path: ${GITHUB_WORKSPACE}/lara-sample/node_modules
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node_modules-
+      #- name: Cache node_modules Directory
+      #  id: node_modules-cache
+      #  uses: actions/cache@v2
+      #  with:
+      #    path: ${GITHUB_WORKSPACE}/lara-sample/node_modules
+      #    key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+      #    restore-keys: |
+      #      ${{ runner.os }}-node_modules-
 
       - name: NPM Install
-        if: steps.node_modules-cache.outputs.cache-hit != 'true'
+        #if: steps.node_modules-cache.outputs.cache-hit != 'true'
         run: |
           cd ${GITHUB_WORKSPACE}/appBase/run
           docker-compose exec -T node make npmi
