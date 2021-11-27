@@ -55,7 +55,7 @@ jobs:
           fi
 
   test:
-    #needs: fixer
+    needs: fixer
     runs-on: ubuntu-20.04
     steps:
       - name: Install docker-compose
@@ -95,3 +95,12 @@ jobs:
         with:
           name: code-coverage-report
           path: appBase/lara-sample/storage/coverage/*
+
+      - name: Notify to Slack
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took,pullRequest
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+        if: always()
