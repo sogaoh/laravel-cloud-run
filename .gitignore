@@ -18,3 +18,10 @@
 /appBase/lara-sample/storage/logs
 /appBase/.env
 /appBase/.envrc
+/surroundings/*/*/.terraform
+/surroundings/*/*/terraform.d
+/surroundings/*/*/generated
+/surroundings/*/*/*.tfvars
+/surroundings/*/*/*.tfvars.*
+/surroundings/*/*/*.tfstate
+/surroundings/*/*/*.tfstate.*
