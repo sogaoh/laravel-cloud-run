@@ -105,7 +105,7 @@ jobs:
       - name: Database initialize
         run: |
           cd ${GITHUB_WORKSPACE}/appBase/run
-          #docker-compose exec -T app make compi
+          docker-compose exec -T app make vendor
           docker-compose exec -T app make fresh
 
       - name: Cache node_modules Directory
