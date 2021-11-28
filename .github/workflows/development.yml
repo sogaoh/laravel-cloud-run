@@ -83,12 +83,12 @@ jobs:
         uses: 8398a7/action-slack@v3
         with:
           status: custom
-          fields: ref,author
+          fields: ref,author,workflow,pullRequest
           custom_payload: |
             {
               attachments: [{
                 color: 'warning',
-                text: `Auto fixed : ${process.env.AS_REF}\n (author) ${process.env.AS_AUTHOR}`,
+                text: `Auto fixed : ${process.env.AS_REF}\n (author) ${process.env.AS_AUTHOR}\n (workflow) ${process.env.AS_WORKFLOW}\n (PR) ${process.env.AS_PULL_REQUEST}`,
               }]
             }
         env:
