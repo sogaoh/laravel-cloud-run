@@ -42,14 +42,6 @@ jobs:
                 }
               ]
             }
-
-          custom_payload: |
-            {
-              attachments: [{
-                color: 'warning',
-                text: `New Discussion by <${{ env.USER_URL }}|${{ env.USER_NAME }}>`
-              }]
-            }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_PRIVATE_WEBHOOK_URL }}
           DISCUSSION_URL: ${{ github.event.discussion.html_url }}
