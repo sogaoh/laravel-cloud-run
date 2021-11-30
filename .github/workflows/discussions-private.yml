@@ -1,49 +1,34 @@
-name: Discussions Notification (to private channel)
-
+name: Discussions Notification (private)
 on:
   discussion:
     types: [created]
   discussion_comment:
     types: [created]
-
 jobs:
   discussion_created:
     runs-on: ubuntu-20.04
     if: ${{ github.event.discussion && !github.event.comment }}
     steps:
       - name: Send GitHub Discussion Notification to Slack
-        uses: 8398a7/action-slack@v3
-        with:
-          status: custom
-          fields: author
-          custom_payload: |
-            {
-              blocks: [
-                {
-                  type: 'section',
-                  text: {
-                    type: 'mrkdwn',
-                    text: `New Discussion by <${{ env.USER_URL }}|${{ env.USER_NAME }}>`
-                  }
-                }
-              ],
-              attachments: [
-                {
-                  color: 'good',
-                  blocks: [
-                    {
-                      type: 'section',
-                      text: {
-                        type: "mrkdwn",
-                        text: `*<${{ env.DISCUSSION_URL }}|${{ env.DISCUSSION_TITLE }}>*\n`
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
+        # Note:
+        # - 一度変数に入れることで、$や`をエスケープしている
+        # - https://stackoverflow.com/questions/69982822/is-there-a-way-to-escape-and-single-quotes-together-in-bash
+        # - printfしないといい感じに"\n"が変換されない
+        run: |
+          title=$(
+          cat <<"EOF"
+          ${{ env.DISCUSSION_TITLE }}
+          EOF
+          )
+          body=$(
+          cat <<"EOF"
+          ${{ env.DISCUSSION_BODY }}
+          EOF
+          )
+          printf -v markdown_message_unescaped %b "<${{ env.DISCUSSION_URL }}|*$title*>\n$body"
+          jq -n -r --arg text "$markdown_message_unescaped" '{"token":"${{ secrets.SLACK_PRIVATE_BOT_TOKEN }}","channel":"${{ env.CHANNEL_ID }}","blocks":[{"type":"section","text":{"type":"mrkdwn","text":"New Discussion by <${{ env.USER_URL }}|${{ env.USER_NAME }}>"}}],"attachments":[{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":$text}}]}]}'|curl -X POST -H 'Authorization: Bearer ${{ secrets.SLACK_PRIVATE_BOT_TOKEN }}' -H "Content-Type: application/json" -d @- https://slack.com/api/chat.postMessage
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_PRIVATE_WEBHOOK_URL }}
+          CHANNEL_ID: ${{ secrets.SLACK_PRIVATE_CHANNEL_ID }}
           DISCUSSION_URL: ${{ github.event.discussion.html_url }}
           DISCUSSION_TITLE: ${{ github.event.discussion.title }}
           DISCUSSION_BODY: ${{ github.event.discussion.body }}
@@ -54,60 +39,22 @@ jobs:
     runs-on: ubuntu-20.04
     if: github.event.comment
     steps:
-      # - name: Markdown Message Adjust
-      #   run: |
-      #     title=$(cat << "EOF"
-      #     ${{ env.DISCUSSION_TITLE }}
-      #     EOF
-      #     )
-      #     body=$(cat << "EOF"
-      #     ${{ env.COMMENT_BODY }}
-      #     EOF
-      #     )
-      #     printf -v markdown_message_unescaped %b "$body"
-      #     echo $markdown_message_unescaped
-      #     echo "##[set-output name=message;]$(echo $markdown_message_unescaped)"
-      #   id: markdown_message_unescaped
-
-      # - name: Echo Markdown Message
-      #   run: |
-      #     echo "Message is: [${{ steps.markdown_message_unescaped.outputs.message }}]"
-
       - name: Send GitHub Discussions Comments to Slack
-        uses: 8398a7/action-slack@v3
-        with:
-          status: custom
-          fields: author
-          custom_payload: |
-            {
-              blocks: [
-                {
-                  type: 'section',
-                  text: {
-                    type: 'mrkdwn',
-                    text: `New comment by <${{ env.USER_URL }}|${{ env.USER_NAME }}>`
-                  }
-                }
-              ],
-              attachments: [
-                {
-                  color: 'good',
-                  blocks: [
-                    {
-                      type: 'section',
-                      text: {
-                        type: "mrkdwn",
-                        text: `*<${{ env.COMMENT_URL }}|Comment on ${{ env.DISCUSSION_TITLE }}>*\n`
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
+        run: |
+          title=$(cat << "EOF"
+          ${{ env.DISCUSSION_TITLE }}
+          EOF
+          )
+          body=$(cat << "EOF"
+          ${{ env.COMMENT_BODY }}
+          EOF
+          )
+          printf -v markdown_message_unescaped %b "*<${{ env.COMMENT_URL }}|Comment on $title>*\n$body"
+          jq -n -r --arg text "$markdown_message_unescaped" '{"token":"${{ secrets.SLACK_PRIVATE_BOT_TOKEN }}","channel":"${{ env.CHANNEL_ID }}","blocks":[{"type":"section","text":{"type":"mrkdwn","text":"New comment by <${{ env.USER_URL }}|${{ env.USER_NAME }}>"}}],"attachments":[{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":$text}}]}]}'|curl -X POST -H 'Authorization: Bearer ${{ secrets.SLACK_PRIVATE_BOT_TOKEN }}' -H "Content-Type: application/json" -d @- https://slack.com/api/chat.postMessage
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_PRIVATE_WEBHOOK_URL }}
+          CHANNEL_ID: ${{ secrets.SLACK_PRIVATE_CHANNEL_ID }}
           DISCUSSION_TITLE: ${{ github.event.discussion.title }}
           COMMENT_URL: ${{ github.event.comment.html_url }}
           COMMENT_BODY: ${{ github.event.comment.body }}
-          USER_URL: ${{ github.event.discussion.user.html_url }}
-          USER_NAME: ${{ github.event.discussion.user.login }}
+          USER_URL: ${{ github.event.comment.user.html_url }}
+          USER_NAME: ${{ github.event.comment.user.login }}
