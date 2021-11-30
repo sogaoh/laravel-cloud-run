@@ -93,7 +93,7 @@ jobs:
             ],
             "attachments":[
               {
-                "color":"good",
+                "color":"#2EB886",
                 "blocks":[
                   {
                     "type":"section",
