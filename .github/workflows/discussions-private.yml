@@ -26,7 +26,36 @@ jobs:
           EOF
           )
           printf -v markdown_message_unescaped %b "<${{ env.DISCUSSION_URL }}|*$title*>\n$body"
-          jq -n -r --arg text "$markdown_message_unescaped" '{"token":"${{ secrets.SLACK_PRIVATE_BOT_TOKEN }}","channel":"${{ env.CHANNEL_ID }}","blocks":[{"type":"section","text":{"type":"mrkdwn","text":"New Discussion by <${{ env.USER_URL }}|${{ env.USER_NAME }}>"}}],"attachments":[{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":$text}}]}]}'|curl -X POST -H 'Authorization: Bearer ${{ secrets.SLACK_PRIVATE_BOT_TOKEN }}' -H "Content-Type: application/json" -d @- https://slack.com/api/chat.postMessage
+          jq -n -r --arg text "$markdown_message_unescaped" '{
+            "token":"${{ secrets.SLACK_PRIVATE_BOT_TOKEN }}",
+            "channel":"${{ env.CHANNEL_ID }}",
+            "color":"#439FE0",
+            "blocks":[
+              {
+                "type":"section",
+                "text":{
+                  "type":"mrkdwn",
+                  "text":"New Discussion by <${{ env.USER_URL }}|${{ env.USER_NAME }}>"
+                }
+              }
+              ],
+              "attachments":[
+                {
+                  "blocks":[
+                    {
+                      "type":"section",
+                      "text":{
+                        "type":"mrkdwn",
+                        "text":$text
+                      }
+                    }
+                  ]
+                }
+              ]
+            }' | curl -X POST
+            -H 'Authorization: Bearer ${{ secrets.SLACK_PRIVATE_BOT_TOKEN }}'
+            -H "Content-Type: application/json"
+            -d @- https://slack.com/api/chat.postMessage
         env:
           CHANNEL_ID: ${{ secrets.SLACK_PRIVATE_CHANNEL_ID }}
           DISCUSSION_URL: ${{ github.event.discussion.html_url }}
@@ -50,7 +79,36 @@ jobs:
           EOF
           )
           printf -v markdown_message_unescaped %b "*<${{ env.COMMENT_URL }}|Comment on $title>*\n$body"
-          jq -n -r --arg text "$markdown_message_unescaped" '{"token":"${{ secrets.SLACK_PRIVATE_BOT_TOKEN }}","channel":"${{ env.CHANNEL_ID }}","blocks":[{"type":"section","text":{"type":"mrkdwn","text":"New comment by <${{ env.USER_URL }}|${{ env.USER_NAME }}>"}}],"attachments":[{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":$text}}]}]}'|curl -X POST -H 'Authorization: Bearer ${{ secrets.SLACK_PRIVATE_BOT_TOKEN }}' -H "Content-Type: application/json" -d @- https://slack.com/api/chat.postMessage
+          jq -n -r --arg text "$markdown_message_unescaped" '{
+            "token":"${{ secrets.SLACK_PRIVATE_BOT_TOKEN }}",
+            "channel":"${{ env.CHANNEL_ID }}",
+            "color":"good",
+            "blocks":[
+              {
+                "type":"section",
+                "text":{
+                  "type":"mrkdwn",
+                  "text":"New comment by <${{ env.USER_URL }}|${{ env.USER_NAME }}>"
+                }
+              }
+            ],
+            "attachments":[
+              {
+                "blocks":[
+                  {
+                    "type":"section",
+                    "text":{
+                      "type":"mrkdwn",
+                      "text":$text
+                    }
+                  }
+                ]
+              }
+            ]
+          }' | curl -X POST
+          -H 'Authorization: Bearer ${{ secrets.SLACK_PRIVATE_BOT_TOKEN }}'
+          -H "Content-Type: application/json"
+          -d @- https://slack.com/api/chat.postMessage
         env:
           CHANNEL_ID: ${{ secrets.SLACK_PRIVATE_CHANNEL_ID }}
           DISCUSSION_TITLE: ${{ github.event.discussion.title }}
