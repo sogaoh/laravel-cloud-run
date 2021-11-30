@@ -42,10 +42,29 @@ jobs:
           fields: author
           custom_payload: |
             {
-              attachments: [{
-                color: 'good',
-                text: `New comment by <${{ env.USER_URL }}|${{ env.USER_NAME }}>`
-              }]
+              blocks: [
+                {
+                  type: 'section',
+                  text: {
+                    type: 'mrkdwn',
+                    text: `New comment by <${{ env.USER_URL }}|${{ env.USER_NAME }}>`
+                  }
+                }
+              ],
+              attachments: [
+                {
+                  color: 'good',
+                  blocks: [
+                    {
+                      type: 'section',
+                      text: {
+                        type: "mrkdwn",
+                        text: `*<${{ env.COMMENT_URL }}|Comment on ${{ env.DISCUSSION_TITLE }}>*\n\n`
+                      }
+                    }
+                  ]
+                }
+              ]
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_PRIVATE_WEBHOOK_URL }}
