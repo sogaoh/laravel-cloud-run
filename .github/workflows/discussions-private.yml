@@ -40,7 +40,7 @@ jobs:
               ],
               "attachments":[
                 {
-                  "color":"#439FE0",
+                  "color":"#ffff00",
                   "blocks":[
                     {
                       "type":"section",
@@ -93,7 +93,7 @@ jobs:
             ],
             "attachments":[
               {
-                "color":"#2EB886",
+                "color":"#439FE0",
                 "blocks":[
                   {
                     "type":"section",
