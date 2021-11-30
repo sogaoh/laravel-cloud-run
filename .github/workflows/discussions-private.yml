@@ -1,4 +1,4 @@
-name: Discussions Notification
+name: Discussions Notification (to private channel)
 
 on:
   discussion:
