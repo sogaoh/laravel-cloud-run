@@ -18,6 +18,33 @@ jobs:
           fields: author
           custom_payload: |
             {
+              blocks: [
+                {
+                  type: 'section',
+                  text: {
+                    type: 'mrkdwn',
+                    text: `New Discussion by <${{ env.USER_URL }}|${{ env.USER_NAME }}>`
+                  }
+                }
+              ],
+              attachments: [
+                {
+                  color: 'good',
+                  blocks: [
+                    {
+                      type: 'section',
+                      text: {
+                        type: "mrkdwn",
+                        text: `*<${{ env.DISCUSSION_URL }}|${{ env.DISCUSSION_TITLE }}>*\n`
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+
+          custom_payload: |
+            {
               attachments: [{
                 color: 'warning',
                 text: `New Discussion by <${{ env.USER_URL }}|${{ env.USER_NAME }}>`
@@ -35,24 +62,24 @@ jobs:
     runs-on: ubuntu-20.04
     if: github.event.comment
     steps:
-      - name: Markdown Message Adjust
-        run: |
-          title=$(cat << "EOF"
-          ${{ env.DISCUSSION_TITLE }}
-          EOF
-          )
-          body=$(cat << "EOF"
-          ${{ env.COMMENT_BODY }}
-          EOF
-          )
-          printf -v markdown_message_unescaped %b "$body"
-          echo $markdown_message_unescaped
-          echo "##[set-output name=message;]$(echo $markdown_message_unescaped)"
-        id: markdown_message_unescaped
+      # - name: Markdown Message Adjust
+      #   run: |
+      #     title=$(cat << "EOF"
+      #     ${{ env.DISCUSSION_TITLE }}
+      #     EOF
+      #     )
+      #     body=$(cat << "EOF"
+      #     ${{ env.COMMENT_BODY }}
+      #     EOF
+      #     )
+      #     printf -v markdown_message_unescaped %b "$body"
+      #     echo $markdown_message_unescaped
+      #     echo "##[set-output name=message;]$(echo $markdown_message_unescaped)"
+      #   id: markdown_message_unescaped
 
-      - name: Echo Markdown Message
-        run: |
-          echo "Message is: [${{ steps.markdown_message_unescaped.outputs.message }}]"
+      # - name: Echo Markdown Message
+      #   run: |
+      #     echo "Message is: [${{ steps.markdown_message_unescaped.outputs.message }}]"
 
       - name: Send GitHub Discussions Comments to Slack
         uses: 8398a7/action-slack@v3
