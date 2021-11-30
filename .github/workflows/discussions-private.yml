@@ -52,9 +52,9 @@ jobs:
                   ]
                 }
               ]
-            }' | curl -X POST
-            -H 'Authorization: Bearer ${{ secrets.SLACK_PRIVATE_BOT_TOKEN }}'
-            -H "Content-Type: application/json"
+            }' | curl -X POST \
+            -H 'Authorization: Bearer ${{ secrets.SLACK_PRIVATE_BOT_TOKEN }}' \
+            -H "Content-Type: application/json" \
             -d @- https://slack.com/api/chat.postMessage
         env:
           CHANNEL_ID: ${{ secrets.SLACK_PRIVATE_CHANNEL_ID }}
@@ -105,9 +105,9 @@ jobs:
                 ]
               }
             ]
-          }' | curl -X POST
-          -H 'Authorization: Bearer ${{ secrets.SLACK_PRIVATE_BOT_TOKEN }}'
-          -H "Content-Type: application/json"
+          }' | curl -X POST \
+          -H 'Authorization: Bearer ${{ secrets.SLACK_PRIVATE_BOT_TOKEN }}' \
+          -H "Content-Type: application/json" \
           -d @- https://slack.com/api/chat.postMessage
         env:
           CHANNEL_ID: ${{ secrets.SLACK_PRIVATE_CHANNEL_ID }}
