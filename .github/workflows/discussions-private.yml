@@ -53,13 +53,13 @@ jobs:
               ],
               attachments: [
                 {
-                  color: 'good',
                   blocks: [
                     {
+                      color: 'good',
                       type: 'section',
                       text: {
                         type: "mrkdwn",
-                        text: `*<${{ env.COMMENT_URL }}|Comment on ${{ env.DISCUSSION_TITLE }}>*\n\n`
+                        text: `*<${{ env.COMMENT_URL }}|Comment on ${{ env.DISCUSSION_TITLE }}>*\n${{ env.COMMENT_BODY }}`
                       }
                     }
                   ]
@@ -68,8 +68,8 @@ jobs:
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_PRIVATE_WEBHOOK_URL }}
-          DISCUSSION_URL: ${{ github.event.discussion.html_url }}
           DISCUSSION_TITLE: ${{ github.event.discussion.title }}
-          DISCUSSION_BODY: ${{ github.event.discussion.body }}
+          COMMENT_URL: ${{ github.event.comment.html_url }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
           USER_URL: ${{ github.event.discussion.user.html_url }}
           USER_NAME: ${{ github.event.discussion.user.login }}
