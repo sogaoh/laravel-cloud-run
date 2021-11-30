@@ -59,7 +59,7 @@ jobs:
                       type: 'section',
                       text: {
                         type: "mrkdwn",
-                        text: `*<${{ env.COMMENT_URL }}|Comment on ${{ env.DISCUSSION_TITLE }}>*\n${{ env.COMMENT_BODY }}`
+                        text: `*<${{ env.COMMENT_URL }}|Comment on ${{ env.DISCUSSION_TITLE }}>*\n`
                       }
                     }
                   ]
