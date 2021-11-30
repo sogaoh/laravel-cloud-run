@@ -46,7 +46,8 @@ jobs:
           ${{ env.COMMENT_BODY }}
           EOF
           )
-          printf -v markdown_message_unescaped %b "*<${{ env.COMMENT_URL }}|Comment on $title>*\n$body"
+          printf -v markdown_message_unescaped %b "$body"
+          echo $markdown_message_unescaped
           echo "##[set-output name=message;]$(echo $markdown_message_unescaped)"
         id: markdown_message_unescaped
 
